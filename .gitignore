@@ -3,3 +3,5 @@ node_modules
 admin-app/node_modules
 client-app/node_modules
 server/node_modules
+server.key
+server.cert

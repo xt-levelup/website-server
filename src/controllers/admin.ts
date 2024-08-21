@@ -20,8 +20,9 @@ export const addProduct = (req: Request, res: Response, next: NextFunction) => {
 
   if (imageFiles && imageFiles.length > 0) {
     imgUrl = imageFiles.map((file) => {
+      console.log("file.path:", file.path);
       const correctFilePath = file.path.replace(
-        "E:\\developer-E\\own-websites\\name-websties\\server\\dist\\",
+        "/opt/render/project/src/dist",
         ""
       );
       console.log("correctFilePath:", correctFilePath);

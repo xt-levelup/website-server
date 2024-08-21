@@ -28,6 +28,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
+const helmet_1 = __importDefault(require("helmet"));
+const compression_1 = __importDefault(require("compression"));
+const morgan_1 = __importDefault(require("morgan"));
+const fs_1 = __importDefault(require("fs"));
 const body_parser_1 = require("body-parser");
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -38,6 +42,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+const accessLogStream = fs_1.default.createWriteStream(path_1.default.join(__dirname, "access.log"), { flags: "a" });
 // --- Cho phép client truy cập thư mục images-------
 const imagesPath = path_1.default.join(__dirname, "images");
 console.log("Static images path:", imagesPath); // Test đường dẫn
@@ -66,6 +71,9 @@ const fileFilter = (req, file, cb) => {
         cb(null, false);
     }
 };
+app.use((0, helmet_1.default)());
+app.use((0, compression_1.default)());
+app.use((0, morgan_1.default)("combined", { stream: accessLogStream }));
 app.use((0, body_parser_1.json)());
 app.use((0, multer_1.default)({
     storage: fileStorage,
@@ -83,7 +91,7 @@ console.log("mongodbUrl:", mongodbUrl);
 mongoose_1.default
     .connect(mongodbUrl)
     .then(() => {
-    app.listen(5000);
+    app.listen(process.env.PORT || 5000);
     console.log("Server connected!");
 })
     .catch((err) => {

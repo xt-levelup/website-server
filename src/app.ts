@@ -1,5 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
+import helmet from "helmet";
+import compression from "compression";
+import morgan from "morgan";
+import fs from "fs";
+import https from "https";
 import { json } from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -13,6 +18,11 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
 
 // --- Cho phép client truy cập thư mục images-------
 const imagesPath = path.join(__dirname, "images");
@@ -59,6 +69,10 @@ const fileFilter = (
   }
 };
 
+app.use(helmet());
+app.use(compression());
+app.use(morgan("combined", { stream: accessLogStream }));
+
 app.use(json());
 
 app.use(
@@ -82,7 +96,7 @@ console.log("mongodbUrl:", mongodbUrl);
 mongoose
   .connect(mongodbUrl)
   .then(() => {
-    app.listen(5000);
+    app.listen(process.env.PORT || 5000);
     console.log("Server connected!");
   })
   .catch((err) => {
