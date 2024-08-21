@@ -22,7 +22,7 @@ export const addProduct = (req: Request, res: Response, next: NextFunction) => {
     imgUrl = imageFiles.map((file) => {
       console.log("file.path:", file.path);
       const correctFilePath = file.path.replace(
-        "/opt/render/project/src/dist",
+        "/opt/render/project/src/dist/",
         ""
       );
       console.log("correctFilePath:", correctFilePath);

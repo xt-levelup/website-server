@@ -15,7 +15,7 @@ const addProduct = (req, res, next) => {
     if (imageFiles && imageFiles.length > 0) {
         imgUrl = imageFiles.map((file) => {
             console.log("file.path:", file.path);
-            const correctFilePath = file.path.replace("/opt/render/project/src/dist", "");
+            const correctFilePath = file.path.replace("/opt/render/project/src/dist/", "");
             console.log("correctFilePath:", correctFilePath);
             return correctFilePath;
         });
